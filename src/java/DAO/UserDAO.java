@@ -25,7 +25,7 @@ public class UserDAO {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public List<User> getFilteredStaff(String fullName, String email, String phone, int role, String gender, Boolean isDeleted, int pageNumber, int pageSize) {
         List<User> filteredUserList = new ArrayList<>();
         String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [Staff] WHERE 1=1";
@@ -78,7 +78,7 @@ public class UserDAO {
         }
         return filteredUserList;
     }
-    
+
     public List<User> getFilteredStaff(String fullName, String email, int role, String gender, Boolean isDeleted) {
         List<User> filteredUserList = new ArrayList<>();
         String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [Staff] WHERE 1=1";
@@ -127,7 +127,7 @@ public class UserDAO {
 
     // Create (Register)
     public boolean registerUser(User user) {
-        String query = "INSERT INTO [User] (Email, Password, Fullname, Gender, Address, Phone, CreatedBy, Avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO [User] (Email, Password, Fullname, Gender, Address, Phone, CreatedBy, Avatar, RoleId, IsDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 0)";
         try {
             ps = conn.prepareStatement(query);
             ps.setString(1, user.getEmail());
@@ -147,7 +147,7 @@ public class UserDAO {
         }
         return false;
     }
-    
+
     // Read (Get User by Id)
     public User getUserById(int id) {
         String query = "SELECT * FROM [User] WHERE ID = ?";
@@ -209,7 +209,7 @@ public class UserDAO {
         }
         return null;
     }
-    
+
     // Get all users
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
@@ -240,7 +240,7 @@ public class UserDAO {
         }
         return userList;
     }
-    
+
     // Get all users with pagination
     public List<User> getAllUsers(int pageNumber, int pageSize) {
         List<User> userList = new ArrayList<>();
@@ -275,7 +275,7 @@ public class UserDAO {
         }
         return userList;
     }
-    
+
     public List<User> getAllPagination(int pageNumber, int pageSize) {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY UserID) AS RowNum, * FROM User) AS SubQuery WHERE RowNum BETWEEN ? AND ?";
@@ -307,7 +307,7 @@ public class UserDAO {
         }
         return userList;
     }
-    
+
     public List<User> getFilteredUsers(String fullName, String email, String phone, String gender, Boolean status, int pageNumber, int pageSize) {
         List<User> filteredUserList = new ArrayList<>();
         String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [User] WHERE 1=1";
@@ -358,7 +358,7 @@ public class UserDAO {
         }
         return filteredUserList;
     }
-    
+
     public List<User> getFilteredUsers(String fullName, String email, String gender, Boolean status) {
         List<User> filteredUserList = new ArrayList<>();
         String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [User] WHERE 1=1";
@@ -462,6 +462,7 @@ public class UserDAO {
                 user.setAddress(rs.getString("Address"));
                 user.setPhone(rs.getString("Phone"));
                 user.setIsDeleted(rs.getBoolean("IsDeleted"));
+                user.setRoleId(rs.getInt("RoleId"));
                 user.setCreatedAt(rs.getDate("CreatedAt"));
                 user.setCreatedBy(rs.getInt("CreatedBy"));
                 user.setAvatar(rs.getString("Avatar"));
@@ -476,7 +477,46 @@ public class UserDAO {
         return null;
     }
 
+    public List<User> getUsersBySpaServiceId(int spaServiceId) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT u.Id, u.Email, u.Password, u.Fullname, u.Gender, u.Address, u.Phone, "
+                + "u.IsDeleted, u.CreatedAt, u.CreatedBy, u.Avatar, u.ChangeHistory, u.RoleId "
+                + "FROM [dbo].[User] u "
+                + "JOIN [Spa].[dbo].[SpaServiceStaff] sss ON u.Id = sss.UserId "
+                + "WHERE sss.SpaServiceId = ? AND u.IsDeleted = 0";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, spaServiceId);
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("Id"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setFullname(rs.getString("Fullname"));
+                user.setGender(rs.getString("Gender"));
+                user.setAddress(rs.getString("Address"));
+                user.setPhone(rs.getString("Phone"));
+                user.setIsDeleted(rs.getBoolean("IsDeleted"));
+                user.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                user.setCreatedBy(rs.getInt("CreatedBy"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setChangeHistory(rs.getString("ChangeHistory"));
+                user.setRoleId(rs.getInt("RoleId"));
+
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception properly
+        }
+
+        return users;
+    }
+
     private void closeResources() {
-        
+
     }
 }
