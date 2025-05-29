@@ -22,7 +22,7 @@ import java.util.Date;
  *
  * @author hoang
  */
-@WebServlet(name = "NewPasswordControl", urlPatterns = {"/new-password"})
+@WebServlet(name = "NewPasswordControl", urlPatterns = { "/new-password" })
 public class NewPasswordControl extends HttpServlet {
 
     @Override

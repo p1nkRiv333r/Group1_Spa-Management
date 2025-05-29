@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author hoang
  */
-@WebServlet(name = "LoginControl", urlPatterns = {"/login"})
+@WebServlet(name = "LoginControl", urlPatterns = { "/login" })
 public class LoginControl extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -38,14 +38,15 @@ public class LoginControl extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,10 +57,10 @@ public class LoginControl extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -73,10 +74,9 @@ public class LoginControl extends HttpServlet {
 
         if (user != null) {
             // save user info to session
-            request.getSession().setAttribute("user", user); 
-            
-            
-            if (user.getRoleId()== 4) {
+            request.getSession().setAttribute("user", user);
+
+            if (user.getRoleId() == 4) {
                 response.sendRedirect("admin/dashboard");
                 return;
             }
@@ -84,9 +84,9 @@ public class LoginControl extends HttpServlet {
                 response.sendRedirect("marketing/list-post");
                 return;
             }
-//            if (user.getRoleId() == 3) response.sendRedirect("sale/dashboard");
-//            if (user.getRoleId() == 6) response.sendRedirect("inventory/list-order");
-            
+            // if (user.getRoleId() == 3) response.sendRedirect("sale/dashboard");
+            // if (user.getRoleId() == 6) response.sendRedirect("inventory/list-order");
+
             response.sendRedirect("home");
         } else {
             // Login failed
