@@ -6,7 +6,6 @@
 package Controller;
 
 import DAO.PostDAO;
-import Model.Category;
 import Model.Post;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,14 +14,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author Legion
  */
-@WebServlet(name="BlogController", urlPatterns={"/public/list-blog"})
-public class BlogController extends HttpServlet {
+@WebServlet(name="PostDetailController", urlPatterns={"/marketing/post-detail"})
+public class PostDetailController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -39,10 +37,10 @@ public class BlogController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet BlogController</title>");  
+            out.println("<title>Servlet PostDetailController</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet BlogController at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet PostDetailController at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,31 +57,41 @@ public class BlogController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
-        
-        int page = 1;
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
-        
-        // Get filtering and sorting parameters
-        String category = request.getParameter("category");
-        String search = request.getParameter("searchQuery");
-        
-        PostDAO postDAO = new PostDAO();
-        List<Post> posts = postDAO.getPosts(page, 8, category, "", "", search, "", "", "No");
-        List<Category> categories = postDAO.getUniqueCategories();
-        List<Post> latestPosts = postDAO.getLatestPosts();
-        int totalPosts = postDAO.getTotalPosts(category, "", "", search);
-        int totalPages = (int) Math.ceil((double) totalPosts / 8);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        request.setAttribute("posts", posts);
-        request.setAttribute("categories", categories);
-        request.setAttribute("latestPosts", latestPosts);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.getRequestDispatcher("/list-blog.jsp").forward(request, response);
-            
+        String postIdStr = request.getParameter("id");
+        if (postIdStr == null || postIdStr.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        int postId = Integer.parseInt(postIdStr);
+        Post post = new PostDAO().getPostById(postId);
+        
+        System.out.println(post.getContent());
+
+
+        if (post == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        // Convert post object to JSON
+        String jsonPost = "[{\"id\":" + post.getId()+ ","
+                + "\"categoryId\":\"" + post.getCategoryId()+ "\","
+                + "\"title\":\"" + post.getTitle()+ "\","
+                + "\"content\":\"" + post.getContent().replace("\"", "\\\"") + "\","
+                + "\"isDeleted\":\"" + post.isIsDeleted() + "\","
+                + "\"createdAt\":\"" + post.getCreatedAt() + "\","
+                + "\"imgURL\":\"" + post.getImgURL()+ "\","
+                + "\"createdBy\":\"" + post.getAuthorName()+ "\""
+                + "}]";
+
+        PrintWriter out = response.getWriter();
+        out.print(jsonPost);
+        out.flush();
+
     } 
 
     /** 
