@@ -9,8 +9,13 @@ package Controller;
 //import Model.Post;
 //import Model.Product;
 //import Model.Slider;
+import DAO.CategoryDAO;
+import DAO.FeedbackDAO;
+import DAO.PostDAO;
+import DAO.SpaServiceDAO;
 import Model.Category;
 import Model.Feedback;
+import Model.Post;
 import Model.SpaService;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -67,7 +72,18 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
          // Retrieve data from DAOs
+    List<Category> categories = new CategoryDAO().getTopCategories(6);
+    List<SpaService> spaServices = new SpaServiceDAO().getTopSpaServices(4);
+    List<Feedback> feedbacks = new FeedbackDAO().getRecentFeedbacks(6);
+    List<Post> posts = new PostDAO().getTopPosts(6);
     
+
+    // Set attributes for JSP
+    request.setAttribute("categories", categories);
+    request.setAttribute("spaServices", spaServices);
+    request.setAttribute("feedbacks", feedbacks);
+    request.setAttribute("posts", posts);
+
     // Forward to JSP
     request.getRequestDispatcher("/Home.jsp").forward(request, response);
     }

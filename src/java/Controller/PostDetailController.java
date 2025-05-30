@@ -68,6 +68,8 @@ public class PostDetailController extends HttpServlet {
 
         int postId = Integer.parseInt(postIdStr);
         Post post = new PostDAO().getPostById(postId);
+        
+        System.out.println(post.getContent());
 
 
         if (post == null) {
