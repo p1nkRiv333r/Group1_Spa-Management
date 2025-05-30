@@ -4,19 +4,8 @@
  */
 package Controller;
 
-//import DAO.PostDAO;
-//import DAO.SliderDAO;
-//import Model.Post;
-//import Model.Product;
-//import Model.Slider;
-import DAO.CategoryDAO;
-import DAO.FeedbackDAO;
-import DAO.PostDAO;
-import DAO.SpaServiceDAO;
-import Model.Category;
-import Model.Feedback;
-import Model.Post;
-import Model.SpaService;
+import DAO.UserDAO;
+import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -24,24 +13,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
- * @author Legion
+ * @author hoang
  */
-@WebServlet(name = "HomeController", urlPatterns = {"/home"})
-public class HomeController extends HttpServlet {
+@WebServlet(name = "LoginControl", urlPatterns = { "/login" })
+public class LoginControl extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -50,56 +29,70 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");            
+            out.println("<title>Servlet LoginControl</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LoginControl at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         // Retrieve data from DAOs
-    List<Category> categories = new CategoryDAO().getTopCategories(6);
-    List<SpaService> spaServices = new SpaServiceDAO().getTopSpaServices(4);
-    List<Feedback> feedbacks = new FeedbackDAO().getRecentFeedbacks(6);
-    List<Post> posts = new PostDAO().getTopPosts(6);
-    
-
-    // Set attributes for JSP
-    request.setAttribute("categories", categories);
-    request.setAttribute("spaServices", spaServices);
-    request.setAttribute("feedbacks", feedbacks);
-    request.setAttribute("posts", posts);
-
-    // Forward to JSP
-    request.getRequestDispatcher("/Home.jsp").forward(request, response);
+        request.getRequestDispatcher("Login.jsp").forward(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.loginUser(email, password);
+
+        if (user != null) {
+            // save user info to session
+            request.getSession().setAttribute("user", user);
+
+            if (user.getRoleId() == 4) {
+                response.sendRedirect("admin/dashboard");
+                return;
+            }
+            if (user.getRoleId() == 2) {
+                response.sendRedirect("marketing/list-post");
+                return;
+            }
+            // if (user.getRoleId() == 3) response.sendRedirect("sale/dashboard");
+            // if (user.getRoleId() == 6) response.sendRedirect("inventory/list-order");
+
+            response.sendRedirect("home");
+        } else {
+            // Login failed
+            request.setAttribute("errorMessage", "Invalid email or password");
+            request.getRequestDispatcher("Login.jsp").forward(request, response);
+        }
     }
 
     /**

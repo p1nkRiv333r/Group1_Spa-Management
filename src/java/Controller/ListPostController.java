@@ -4,19 +4,9 @@
  */
 package Controller;
 
-//import DAO.PostDAO;
-//import DAO.SliderDAO;
-//import Model.Post;
-//import Model.Product;
-//import Model.Slider;
-import DAO.CategoryDAO;
-import DAO.FeedbackDAO;
 import DAO.PostDAO;
-import DAO.SpaServiceDAO;
 import Model.Category;
-import Model.Feedback;
 import Model.Post;
-import Model.SpaService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -30,8 +20,8 @@ import java.util.List;
  *
  * @author Legion
  */
-@WebServlet(name = "HomeController", urlPatterns = {"/home"})
-public class HomeController extends HttpServlet {
+@WebServlet(name = "ListPostController", urlPatterns = {"/marketing/list-post"})
+public class ListPostController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,10 +40,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");            
+            out.println("<title>Servlet ListPostController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ListPostController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -71,21 +61,49 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         // Retrieve data from DAOs
-    List<Category> categories = new CategoryDAO().getTopCategories(6);
-    List<SpaService> spaServices = new SpaServiceDAO().getTopSpaServices(4);
-    List<Feedback> feedbacks = new FeedbackDAO().getRecentFeedbacks(6);
-    List<Post> posts = new PostDAO().getTopPosts(6);
-    
 
-    // Set attributes for JSP
-    request.setAttribute("categories", categories);
-    request.setAttribute("spaServices", spaServices);
-    request.setAttribute("feedbacks", feedbacks);
-    request.setAttribute("posts", posts);
+        int PAGE_SIZE = 10;
+        int page = 1;
+        String pageStr = request.getParameter("page");
+        if (pageStr != null && !pageStr.isEmpty()) {
+            page = Integer.parseInt(pageStr);
+        }
 
-    // Forward to JSP
-    request.getRequestDispatcher("/Home.jsp").forward(request, response);
+        // Get filtering and sorting parameters
+        String category = request.getParameter("category");
+        String author = request.getParameter("author");
+        String status = request.getParameter("status");
+        String search = request.getParameter("search");
+        String sortBy = request.getParameter("sortBy");
+        String sortOrder = request.getParameter("sortOrder");
+
+        // Fetch posts for the requested page with filters and sorting
+        PostDAO postDAO = new PostDAO();
+        List<Post> posts = postDAO.getPosts(page, PAGE_SIZE, category, author, status, search, sortBy, sortOrder, "Yes");
+
+        // Get the total number of posts for pagination
+        int totalPosts = postDAO.getTotalPosts(category, author, status, search);
+        int totalPages = (int) Math.ceil((double) totalPosts / PAGE_SIZE);
+
+        // Fetch filter options
+        List<Category> categories = postDAO.getUniqueCategories();
+        List<String> authors = postDAO.getUniqueAuthors();
+
+        // Set attributes for the JSP
+        request.setAttribute("posts", posts);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("categories", categories);
+        request.setAttribute("authors", authors);
+        request.setAttribute("category", category);
+        request.setAttribute("author", author);
+        request.setAttribute("status", status);
+        request.setAttribute("search", search);
+        request.setAttribute("sortBy", sortBy);
+        request.setAttribute("sortOrder", sortOrder);
+        request.setAttribute("isSuccess", request.getParameter("isSuccess"));
+        
+        request.getRequestDispatcher("/marketing-post.jsp").forward(request, response);
     }
 
     /**
