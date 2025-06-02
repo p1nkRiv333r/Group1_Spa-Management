@@ -28,7 +28,7 @@ public class UserDAO {
 
     public List<User> getFilteredStaff(String fullName, String email, String phone, int role, String gender, Boolean isDeleted, int pageNumber, int pageSize) {
         List<User> filteredUserList = new ArrayList<>();
-        String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [Staff] WHERE 1=1";
+        String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [User] WHERE 1=1";
         // Add filter conditions
         if (fullName != null && !fullName.isEmpty()) {
             query += " AND Fullname LIKE '%" + fullName + "%'";
@@ -39,9 +39,9 @@ public class UserDAO {
         if (phone != null && !phone.isEmpty()) {
             query += " AND Phone LIKE '%" + phone + "%'";
         }
-        if (role != -1) {
-            query += " AND Role = " + role;
-        }
+
+        query += " AND RoleId = " + role;
+
         if (gender != null && !gender.isEmpty()) {
             query += " AND Gender = '" + gender + "'";
         }
@@ -81,7 +81,7 @@ public class UserDAO {
 
     public List<User> getFilteredStaff(String fullName, String email, int role, String gender, Boolean isDeleted) {
         List<User> filteredUserList = new ArrayList<>();
-        String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [Staff] WHERE 1=1";
+        String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [User] WHERE 1=1";
         // Add filter conditions
         if (fullName != null && !fullName.isEmpty()) {
             query += " AND Fullname LIKE '%" + fullName + "%'";
@@ -90,7 +90,7 @@ public class UserDAO {
             query += " AND Email LIKE '%" + email + "%'";
         }
         if (role != -1) {
-            query += " AND Role = " + role;
+            query += " AND RoleID = " + role;
         }
         if (gender != null && !gender.isEmpty()) {
             query += " AND Gender LIKE '%" + gender + "%'";
@@ -112,7 +112,7 @@ public class UserDAO {
                 staff.setGender(rs.getString("Gender"));
                 staff.setAddress(rs.getString("Address"));
                 staff.setPhone(rs.getString("Phone"));
-                staff.setRoleId(rs.getInt("Role"));
+                staff.setRoleId(rs.getInt("RoleId"));
                 staff.setIsDeleted(rs.getBoolean("IsDeleted"));
                 staff.setCreatedAt(rs.getDate("CreatedAt"));
                 staff.setCreatedBy(rs.getInt("CreatedBy"));
@@ -178,6 +178,38 @@ public class UserDAO {
         }
         return null;
     }
+    
+    public User getStaffById(int id) {
+        String query = "SELECT * FROM [User] WHERE ID = ?";
+        try {
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("ID"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setFullname(rs.getString("Fullname"));
+                user.setGender(rs.getString("Gender"));
+                user.setAddress(rs.getString("Address"));
+                user.setPhone(rs.getString("Phone"));
+                user.setIsDeleted(rs.getBoolean("IsDeleted"));
+                user.setCreatedAt(rs.getDate("CreatedAt"));
+                user.setCreatedBy(rs.getInt("CreatedBy"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setChangeHistory(rs.getString("ChangeHistory"));
+                user.setRoleId(rs.getInt("RoleId"));
+                return user;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+
 
     // Read (Get User by Email)
     public User getUserByEmail(String email) {
@@ -266,6 +298,7 @@ public class UserDAO {
                 user.setCreatedBy(rs.getInt("CreatedBy"));
                 user.setAvatar(rs.getString("Avatar"));
                 user.setChangeHistory(rs.getString("ChangeHistory"));
+                user.setRoleId(rs.getInt("RoleId"));
                 userList.add(user);
             }
         } catch (SQLException e) {
@@ -427,6 +460,32 @@ public class UserDAO {
         }
         return false;
     }
+    
+      public boolean updateStaff(User user) {
+        String query = "UPDATE [User] SET Email=?, Password=?, Fullname=?, Gender=?, Address=?, Phone=?, IsDeleted=?, CreatedBy=?, Avatar=?, ChangeHistory=?, RoleId = ? WHERE ID=?";
+        try {
+            ps = conn.prepareStatement(query);
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFullname());
+            ps.setString(4, user.getGender());
+            ps.setString(5, user.getAddress());
+            ps.setString(6, user.getPhone());
+            ps.setBoolean(7, user.isIsDeleted());
+            ps.setInt(8, user.getCreatedBy());
+            ps.setString(9, user.getAvatar());
+            ps.setString(10, user.getChangeHistory());
+            ps.setInt(11, user.getRoleId());
+            ps.setInt(12, user.getId());
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
 
     // Delete (Delete User)
     public boolean deleteUser(int userID) {
@@ -512,8 +571,34 @@ public class UserDAO {
             e.printStackTrace();
             // Handle exception properly
         }
+        
+        
+        
 
         return users;
+    }
+    
+    public int getTotalUsers() {
+        String query = "SELECT COUNT(*) AS total FROM [User]";
+        int total = 0;
+        try {
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, "Error in getTotalUsers", e);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                // Do not close conn here since it's initialized in constructor and reused
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, "Error closing resources", e);
+            }
+        }
+        return total;
     }
 
     private void closeResources() {
