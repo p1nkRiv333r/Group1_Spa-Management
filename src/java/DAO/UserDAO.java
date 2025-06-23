@@ -81,7 +81,7 @@ public class UserDAO {
 
     public List<User> getFilteredStaff(String fullName, String email, int role, String gender, Boolean isDeleted) {
         List<User> filteredUserList = new ArrayList<>();
-        String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [User] WHERE 1=1";
+        String query = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY ID) AS RowNum FROM [User] WHERE RoleID not in (1,4) AND 1=1";
         // Add filter conditions
         if (fullName != null && !fullName.isEmpty()) {
             query += " AND Fullname LIKE '%" + fullName + "%'";
@@ -178,7 +178,7 @@ public class UserDAO {
         }
         return null;
     }
-    
+
     public User getStaffById(int id) {
         String query = "SELECT * FROM [User] WHERE ID = ?";
         try {
@@ -209,7 +209,6 @@ public class UserDAO {
         }
         return null;
     }
-
 
     // Read (Get User by Email)
     public User getUserByEmail(String email) {
@@ -246,6 +245,36 @@ public class UserDAO {
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM [User]";
+        try {
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("ID"));
+                user.setEmail(rs.getString("Email"));
+                user.setPassword(rs.getString("Password"));
+                user.setFullname(rs.getString("Fullname"));
+                user.setGender(rs.getString("Gender"));
+                user.setAddress(rs.getString("Address"));
+                user.setPhone(rs.getString("Phone"));
+                user.setIsDeleted(rs.getBoolean("IsDeleted"));
+                user.setCreatedAt(rs.getDate("CreatedAt"));
+                user.setCreatedBy(rs.getInt("CreatedBy"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setChangeHistory(rs.getString("ChangeHistory"));
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            closeResources();
+        }
+        return userList;
+    }
+    
+    public List<User> getAllCustomers() {
+        List<User> userList = new ArrayList<>();
+        String query = "SELECT * FROM [User] where roleid not in (2, 4)";
         try {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
@@ -460,8 +489,8 @@ public class UserDAO {
         }
         return false;
     }
-    
-      public boolean updateStaff(User user) {
+
+    public boolean updateStaff(User user) {
         String query = "UPDATE [User] SET Email=?, Password=?, Fullname=?, Gender=?, Address=?, Phone=?, IsDeleted=?, CreatedBy=?, Avatar=?, ChangeHistory=?, RoleId = ? WHERE ID=?";
         try {
             ps = conn.prepareStatement(query);
@@ -571,13 +600,10 @@ public class UserDAO {
             e.printStackTrace();
             // Handle exception properly
         }
-        
-        
-        
 
         return users;
     }
-    
+
     public int getTotalUsers() {
         String query = "SELECT COUNT(*) AS total FROM [User]";
         int total = 0;
@@ -591,8 +617,12 @@ public class UserDAO {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, "Error in getTotalUsers", e);
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
                 // Do not close conn here since it's initialized in constructor and reused
             } catch (SQLException e) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, "Error closing resources", e);
@@ -600,6 +630,47 @@ public class UserDAO {
         }
         return total;
     }
+
+    
+    
+
+    public List<User> getStaffList() {
+        List<User> staff = new ArrayList<>();
+        String sql = "SELECT ID, Fullname FROM [User] WHERE RoleId = (SELECT ID FROM Role WHERE Name = 'Chuyên viên tr? li?u')";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("ID"));
+                user.setFullname(rs.getString("Fullname"));
+                staff.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return staff;
+
+    }
+
+    public boolean updateLoyaltyPoints(int userId, int newPoints) {
+        String sql = "UPDATE [User] SET loyaltyPoints = loyaltyPoints + ? WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, newPoints);
+            stmt.setInt(2, userId);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); // hoặc logging
+            return false;
+        }
+
+
+    }
+
+   
 
     private void closeResources() {
 
