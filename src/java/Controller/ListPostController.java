@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Legion
  */
-@WebServlet(name = "ListPostController", urlPatterns = {"/marketing/list-post"})
+@WebServlet(name = "ListPostController", urlPatterns = {"/staff/list-post"})
 public class ListPostController extends HttpServlet {
 
     /**
@@ -89,7 +89,7 @@ public class ListPostController extends HttpServlet {
         List<Category> categories = postDAO.getUniqueCategories();
         List<String> authors = postDAO.getUniqueAuthors();
 
-        // Set attributes for the JSP
+        // Set attributes for the JSP 
         request.setAttribute("posts", posts);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);

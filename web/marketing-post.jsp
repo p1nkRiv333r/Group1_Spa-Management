@@ -34,7 +34,7 @@
     </head>
 
     <body>
-        <%@ include file="marketing-sidebar.jsp" %>
+        <%@ include file="staff-sidebar.jsp" %>
 
         <div class="mt-5 main-content">
             <c:if test="${isSuccess ne null && isSuccess}">
@@ -188,7 +188,7 @@
         <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="addPostModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="post" action="add-post">
+                    <form method="post" action="add-post"  id="form">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addPostModalLabel">Add New Post</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -250,7 +250,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="postContentEdit">Content</label>
-                                <textarea class="form-control" id="postContentEdit" name="content" rows="5" required></textarea>
+                                <div id="postContentEdit" style="height: 900px;"></div>
+                                <input type="hidden" name="content" id="contenttent" />
                             </div>
                             <div class="form-group">
                                 <label for="createdAt">Created At: </label>
@@ -320,12 +321,13 @@
                                     }
         </script>
 
+
+
         <script>
             function updateImage(sliderId) {
                 let fileInput = document.getElementById(`imageFile` + sliderId);
                 let image = document.getElementById(`image` + sliderId);
                 let hiddenInput = document.getElementById(`imageUrl` + sliderId);
-                console.log(fileInput, image, hiddenInput)
 
                 // check file uploaded
                 if (fileInput.files && fileInput.files[0]) {
@@ -374,6 +376,15 @@
                         ['clean']
                     ]
                 }
+            });
+
+            var form = document.getElementById('form');  // hoặc id form cụ thể
+            var content = document.getElementById('contenttent');
+
+            console.log(form)
+
+            form.addEventListener('submit', function (event) {
+                document.getElementById('editContent').value = quill.root.innerHTML;
             });
         </script>
 

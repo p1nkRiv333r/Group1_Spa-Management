@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Legion
  */
-@WebServlet(name = "AddPostController", urlPatterns = {"/marketing/add-post"})
+@WebServlet(name = "AddPostController", urlPatterns = {"/staff/add-post"})
 public class AddPostController extends HttpServlet {
 
     /**

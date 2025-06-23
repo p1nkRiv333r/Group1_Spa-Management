@@ -26,7 +26,7 @@
     </head>
 
     <body>
-        <%@ include file="marketing-sidebar.jsp" %>
+        <%@ include file="staff-sidebar.jsp" %>
 
         <div class="mt-5 main-content">
             <c:if test="${isSuccess ne null && isSuccess}">
@@ -60,7 +60,6 @@
                         <input type="text" class="form-control" id="postTitleEdit" name="title" required>
                     </div>
                     <div class="form-group">
-                        <label for="postContentEdit">Content</label>
                         <!--<textarea class="form-control" id="postContentEdit" name="content" rows="5" required></textarea>-->
                         <label for="editContent" class="form-label">Content:</label>
                         <div id="postContentEdit" style="height: 900px;"></div>

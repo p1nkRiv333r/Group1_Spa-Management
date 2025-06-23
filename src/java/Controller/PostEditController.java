@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author anhdu
  */
-@WebServlet(name = "PostEditController", urlPatterns = {"/marketing/post-edit"})
+@WebServlet(name = "PostEditController", urlPatterns = {"/staff/post-edit"})
 public class PostEditController extends HttpServlet {
 
     /**
