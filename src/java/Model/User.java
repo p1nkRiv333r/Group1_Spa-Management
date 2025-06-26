@@ -21,6 +21,47 @@ public class User {
     private String avatar;
     private String changeHistory;
     private int roleId;
+    private String roleString;
+    private int loyaltyPoints;
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints;
+    }
+
+    public void setLoyaltyPoints(int loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
+    }
+    
+    public String getRoleString() {
+        return roleString;
+    }
+
+    public void setRoleString(String roleString) {
+        this.roleString = roleString;
+    }
+    
+    
+
+    public User(int id, String email, String password, String fullname, String gender, String address, String phone, boolean isDeleted, Date createdAt, int createdBy, String avatar, String changeHistory, int roleId) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.fullname = fullname;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
+        this.isDeleted = isDeleted;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.avatar = avatar;
+        this.changeHistory = changeHistory;
+        this.roleId = roleId;
+    }
+
+    public User() {
+    }
+    
+    
 
     public String getChangeHistory() {
         return changeHistory;
@@ -124,6 +165,11 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", email=" + email + ", password=" + password + ", fullname=" + fullname + ", gender=" + gender + ", address=" + address + ", phone=" + phone + ", isDeleted=" + isDeleted + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", avatar=" + avatar + ", changeHistory=" + changeHistory + ", roleId=" + roleId + ", roleString=" + roleString + '}';
     }
     
     
