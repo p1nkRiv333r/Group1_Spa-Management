@@ -11,6 +11,10 @@ import Model.Appointment;
 import Model.Room;
 import Model.User;
 import java.io.IOException;
+<<<<<<< Updated upstream
+=======
+import java.io.PrintWriter;
+>>>>>>> Stashed changes
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,6 +29,10 @@ import java.util.logging.Logger;
 
 /**
  *
+<<<<<<< Updated upstream
+=======
+ * @author Legion
+>>>>>>> Stashed changes
  */
 @WebServlet(name = "AdminAppointmentController", urlPatterns = {"/admin/appointments"})
 public class AdminAppointmentController extends HttpServlet {

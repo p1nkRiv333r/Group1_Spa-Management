@@ -87,7 +87,11 @@
             </div>
 
             <div class="d-flex justify-content-between">
+<<<<<<< Updated upstream
                 <a href="discount-code" class="btn btn-secondary">Quay lại</a>
+=======
+                <a href="admin/discount-code" class="btn btn-secondary">Quay lại</a>
+>>>>>>> Stashed changes
                 <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
             </div>
         </form>

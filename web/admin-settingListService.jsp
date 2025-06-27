@@ -242,7 +242,153 @@
                                             });
             </script>
 
+<<<<<<< Updated upstream
             
+=======
+            <script>
+                // Lưu trữ dữ liệu gốc của bảng
+                let originalRows = [];
+
+                // Hàm lấy và lưu dữ liệu gốc của bảng
+                function storeOriginalRows() {
+                    const tbody = document.getElementById('table-content-body');
+                    originalRows = Array.from(tbody.querySelectorAll('tr'));
+                }
+
+                // Hàm điền danh sách sortBy
+                function populateSortByDropdown() {
+                    const sortBySelect = document.getElementById('sortBy');
+                    const headers = document.querySelectorAll('.table thead th');
+                    const columnsToSort = [];
+
+                    // Lấy các cột, trừ cột "Action"
+                    headers.forEach((header, index) => {
+                        const headerText = header.textContent.trim();
+                        if (headerText !== 'Action') {
+                            columnsToSort.push({text: headerText, index: index});
+                        }
+                    });
+
+                    // Xóa và thêm các tùy chọn mới
+                    sortBySelect.innerHTML = '<option value="">Select Column to Sort</option>';
+                    columnsToSort.forEach(column => {
+                        const option = document.createElement('option');
+                        option.value = column.index;
+                        option.textContent = column.text;
+                        sortBySelect.appendChild(option);
+                    });
+                }
+
+                // Hàm lọc và sắp xếp bảng
+                function filterAndSortTable() {
+                    const searchEmail = document.getElementById('searchEmail').value.toLowerCase().trim();
+                    const searchName = document.getElementById('searchName').value.toLowerCase().trim();
+                    const status = document.getElementById('status').value;
+                    const role = document.getElementById('role').value;
+                    const sortBy = document.getElementById('sortBy').value;
+                    const sortOrder = document.getElementById('sortOrder').value;
+                    const tbody = document.getElementById('table-content-body');
+
+                    // Lọc các hàng
+                    let filteredRows = originalRows.filter(row => {
+                        const email = row.cells[1].textContent.toLowerCase().trim();
+                        const name = row.cells[2].textContent.toLowerCase().trim();
+                        const isDeleted = row.cells[6].querySelector('.btn-danger') ? true : false; // Kiểm tra trạng thái
+                        const roleText = row.cells[5].textContent.trim();
+                        const roleMap = {
+                            'Khách hàng': '1',
+                            'Chuyên viên trị liệu': '2',
+                            'Lễ tân': '3',
+                            'Quản trị viên': '4',
+                            'Vai trò không xác định': ''
+                        };
+
+                        // Lọc theo email
+                        const emailMatch = searchEmail === '' || email.includes(searchEmail);
+
+                        // Lọc theo name
+                        const nameMatch = searchName === '' || name.includes(searchName);
+
+                        // Lọc theo status
+                        const statusMatch = status === '' ||
+                                (status === 'show' && !isDeleted) ||
+                                (status === 'hide' && isDeleted);
+
+                        // Lọc theo role
+                        const roleMatch = role === '' || roleMap[roleText] === role;
+
+                        return emailMatch && nameMatch && statusMatch && roleMatch;
+                    });
+
+                    // Sắp xếp các hàng đã lọc
+                    if (sortBy !== '') {
+                        filteredRows.sort((rowA, rowB) => {
+                            const cellA = rowA.cells[sortBy].textContent.trim();
+                            const cellB = rowB.cells[sortBy].textContent.trim();
+
+                            // Sắp xếp cột ID (#)
+                            if (sortBy === '0') {
+                                const numA = parseInt(cellA, 10);
+                                const numB = parseInt(cellB, 10);
+                                return sortOrder === 'ASC' ? numA - numB : numB - numA;
+                            }
+
+                            // Sắp xếp cột Role
+                            if (sortBy === '5') {
+                                const roleOrder = {
+                                    'Khách hàng': 1,
+                                    'Chuyên viên trị liệu': 2,
+                                    'Lễ tân': 3,
+                                    'Quản trị viên': 4,
+                                    'Vai trò không xác định': 5
+                                };
+                                const valueA = roleOrder[cellA] || 999;
+                                const valueB = roleOrder[cellB] || 999;
+                                return sortOrder === 'ASC' ? valueA - valueB : valueB - valueA;
+                            }
+
+                            // Sắp xếp các cột chuỗi khác
+                            return sortOrder === 'ASC'
+                                    ? cellA.localeCompare(cellB)
+                                    : cellB.localeCompare(cellB, cellA);
+                        });
+                    }
+
+                    // Cập nhật bảng
+                    tbody.innerHTML = '';
+                    filteredRows.forEach(row => tbody.appendChild(row));
+                }
+
+                // Hàm debounce để giới hạn tần suất gọi hàm
+                function debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+
+                // Gắn sự kiện cho các trường
+                window.addEventListener('load', () => {
+                    storeOriginalRows(); // Lưu dữ liệu gốc
+                    populateSortByDropdown(); // Điền sortBy dropdown
+
+                    // Gắn sự kiện input/change cho các trường
+                    const inputs = ['searchEmail', 'searchName', 'status', 'role', 'sortBy', 'sortOrder'];
+                    inputs.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            const eventType = element.tagName === 'INPUT' ? 'input' : 'change';
+                            element.addEventListener(eventType, debounce(filterAndSortTable, 300));
+                        }
+                    });
+                });
+            </script>
+>>>>>>> Stashed changes
 
 
             <script>

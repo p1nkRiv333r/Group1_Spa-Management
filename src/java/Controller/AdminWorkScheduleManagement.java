@@ -63,9 +63,14 @@ public class AdminWorkScheduleManagement extends HttpServlet {
                     for(User staff : userDao.getStaffList()) {
                         if(appointment.getStaffId() == staff.getId()) {
                             event.put("title", staff.getFullname());
+<<<<<<< Updated upstream
                             break;
                         }
                         
+=======
+                        }
+                        break;
+>>>>>>> Stashed changes
                     }
                     
                     

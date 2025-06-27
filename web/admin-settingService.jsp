@@ -122,7 +122,108 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
+<<<<<<< Updated upstream
    
+=======
+        <!--        <script>
+                                            function view(id) {
+                                                fetch('post-detail?id=' + id)
+                                                        .then(response => response.json())
+                                                        .then(data => {
+                                                            data.forEach(post => {
+                                                                document.getElementById('postId').value = post.id;
+                                                                document.getElementById('postTitleEdit').value = post.title;
+                                                                document.getElementById('postContentEdit').value = post.content;
+                                                                document.getElementById('createdAt').value = post.createdAt;
+                                                                document.getElementById('createdBy').value = post.createdBy;
+                                                                document.getElementById('image1').src = post.imgURL;
+                                                                document.getElementById('imageUrl1').value = post.imgURL;
+        
+        
+                                                                let listCategory = document.getElementsByClassName('cateOption');
+                                                                for (let i = 0; i < listCategory.length; i++) {
+                                                                    if (listCategory[i].value === post.categoryIdId) {
+                                                                        listCategory[i].selected = true;
+                                                                    }
+                                                                }
+        
+                                                            });
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error fetching post data:', error);
+                                                        }
+                                                        );
+                                            }
+                </script>-->
+
+
+
+        <!--        <script>
+                    function updateImage(sliderId) {
+                        let fileInput = document.getElementById(`imageFile` + sliderId);
+                        let image = document.getElementById(`image` + sliderId);
+                        let hiddenInput = document.getElementById(`imageUrl` + sliderId);
+        
+                        // check file uploaded
+                        if (fileInput.files && fileInput.files[0]) {
+                            const file = fileInput.files[0];
+                            const maxSize = 2 * 1024 * 1024; // 2 MB in bytes
+        
+                            if (file.size > maxSize) {
+                                alert("The selected file is too large. Please select a file smaller than 2 MB.");
+                                fileInput.value = ''; // Clear the file input
+                                return;
+                            }
+        
+                            // dịch image thành url
+                            const reader = new FileReader();
+        
+                            reader.onload = function (e) {
+                                // Update the image src
+                                image.src = e.target.result;
+        
+                                // Optionally, update the hidden input with the base64 data URL
+                                hiddenInput.value = e.target.result;
+                            };
+        
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                </script>-->
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+        <!-- Quill.js library -->
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+        <script>
+                var quill = new Quill('#postContentEdit', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{'header': [1, 2, 3, false]}],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{'align': []}],
+                            [{'list': 'ordered'}, {'list': 'bullet'}],
+                            ['link', 'image'],
+                            ['clean']
+                        ]
+                    }
+                });
+
+                var form = document.getElementById('form');  // hoặc id form cụ thể
+                var content = document.getElementById('contenttent');
+
+                console.log(form)
+
+                form.addEventListener('submit', function (event) {
+                    document.getElementById('editContent').value = quill.root.innerHTML;
+                });
+        </script>
+
+>>>>>>> Stashed changes
     </body>
 
 </html>
