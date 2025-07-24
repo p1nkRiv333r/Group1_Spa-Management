@@ -32,19 +32,6 @@
         <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
-<<<<<<< Updated upstream
-    </head>
-
-    <body>
-        <!-- Page Preloder -->
-        <div id="preloder">
-            <div class="loader"></div>
-        </div>
-
-        <!-- Offcanvas Menu Section Begin -->
-        <%@ include file="header.jsp" %>
-
-=======
 
         <style>
             select.ellipsis option,
@@ -67,7 +54,6 @@
         <!-- Offcanvas Menu Section Begin -->
         <%@ include file="header.jsp" %>
 
->>>>>>> Stashed changes
         <!-- Breadcrumb Section Begin -->
         <div class="breadcrumb-section">
             <div class="container">
@@ -106,7 +92,6 @@
                                             <i class="icon_star-half_alt"></i>
                                         </div>
                                     </div>
-<<<<<<< Updated upstream
                                 </div>
                                 <h2>${service.price}$<span>/Service</span></h2>
                                 <table>
@@ -126,95 +111,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="rd-reviews">
-                            <h4>Reviews</h4>
-                            <div class="review-item">
-                                <div class="ri-pic">
-                                    <img src="img/room/avatar/avatar-1.jpg" alt="">
-                                </div>
-                                <div class="ri-text">
-                                    <span>27 Aug 2019</span>
-                                    <div class="rating">
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star-half_alt"></i>
-                                    </div>
-                                    <h5>Brandon Kelley</h5>
-                                    <p>Neque porro qui squam est, qui dolorem ipsum quia dolor sit amet, consectetur,
-                                        adipisci velit, sed quia non numquam eius modi tempora. incidunt ut labore et dolore
-                                        magnam.</p>
-=======
->>>>>>> Stashed changes
-                                </div>
-                                <h2>${service.price}$<span>/Service</span></h2>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td class="r-o">Duration:</td>
-                                            <td>${service.durationMinutes} minutes</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="r-o">Category ID:</td>
-                                            <td>${service.category.categoryName}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="r-o">Description:</td>
-                                            <td>${service.description}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-<<<<<<< Updated upstream
-                            <div class="review-item">
-                                <div class="ri-pic">
-                                    <img src="img/room/avatar/avatar-2.jpg" alt="">
-                                </div>
-                                <div class="ri-text">
-                                    <span>27 Aug 2019</span>
-                                    <div class="rating">
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star"></i>
-                                        <i class="icon_star-half_alt"></i>
-                                    </div>
-                                    <h5>Brandon Kelley</h5>
-                                    <p>Neque porro qui squam est, qui dolorem ipsum quia dolor sit amet, consectetur,
-                                        adipisci velit, sed quia non numquam eius modi tempora. incidunt ut labore et dolore
-                                        magnam.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review-add">
-                            <h4>Add Review</h4>
-                            <form action="#" class="ra-form">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <input type="text" placeholder="Name*">
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input type="text" placeholder="Email*">
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div>
-                                            <h5>You Rating:</h5>
-                                            <div class="rating">
-                                                <i class="icon_star"></i>
-                                                <i class="icon_star"></i>
-                                                <i class="icon_star"></i>
-                                                <i class="icon_star"></i>
-                                                <i class="icon_star-half_alt"></i>
-                                            </div>
-                                        </div>
-                                        <textarea placeholder="Your Review"></textarea>
-                                        <button type="submit">Submit Now</button>
-                                    </div>
-                                </div>
-                            </form>
-=======
                         </div>
                         <div class="rd-reviews">
                             <h4>Reviews</h4>
@@ -259,7 +155,6 @@
 
 
 
->>>>>>> Stashed changes
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -270,11 +165,7 @@
                                 <input type="hidden" name="serviceId" value="${service.id}">
                                 <div class="check-date">
                                     <label for="date-out">Check In:</label>
-<<<<<<< Updated upstream
-                                    <input type="text" class="date-input" name="scheduledAt" id="date-out">
-=======
                                     <input type="text" class="date-input" name="scheduledAt" id="date-out" required>
->>>>>>> Stashed changes
                                     <i class="icon_calendar"></i>
                                 </div>
                                 <div class="select-option">
@@ -285,17 +176,6 @@
                                         </c:forEach>
                                     </select>
                                 </div>
-<<<<<<< Updated upstream
-                                <div class="select-option">
-                                    <label for="room">Room:</label>
-                                    <select id="room" name="room">
-                                        <c:forEach var="room" items="${rooms}">
-                                            <option value="${room.id}">${room.name}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <button type="submit">Submit Booking</button>
-=======
                                 <div class="select-option ellipsis">
                                     <label for="room">Room:</label>
                                     <select id="room" name="room">
@@ -349,7 +229,6 @@
                                     </select>
                                 </div>
                                 <button type="submit">Submit Booking <span id="finalPrice">${service.price}</span>$</button>
->>>>>>> Stashed changes
                             </form>
                         </div>
                     </div>
@@ -435,19 +314,6 @@
             </div>
         </div>
         <!-- Search model end -->
-<<<<<<< Updated upstream
-
-        <!-- Js Plugins -->
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.magnific-popup.min.js"></script>
-        <script src="js/jquery.nice-select.min.js"></script>
-        <script src="js/jquery-ui.min.js"></script>
-        <script src="js/jquery.slicknav.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/main.js"></script>
-    </body>
-=======
 
         <!-- Js Plugins -->
         <script src="js/jquery-3.3.1.min.js"></script>
@@ -491,6 +357,5 @@
                                         window.addEventListener("DOMContentLoaded", updateFinalPrice);
     </script>
 
->>>>>>> Stashed changes
 
 </html>

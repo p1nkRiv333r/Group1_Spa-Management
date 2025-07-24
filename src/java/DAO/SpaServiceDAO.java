@@ -6,6 +6,7 @@ package DAO;
 
 import Model.Category;
 import Model.SpaService;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -30,7 +31,7 @@ public class SpaServiceDAO extends DBContext {
             System.out.println("Connect failed");
         }
     }
-
+    
     public List<SpaService> getTopSpaServices(int i) {
         List<SpaService> list = new ArrayList<>();
         String sql = "SELECT TOP " + i + " * FROM SpaService WHERE IsActive = 1";
@@ -370,10 +371,7 @@ public class SpaServiceDAO extends DBContext {
 
         return 0;
     }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
     public void addService(SpaService service) {
         String sql = "INSERT INTO SpaService (name, description, durationMinutes, price, isActive, categoryId, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -389,39 +387,7 @@ public class SpaServiceDAO extends DBContext {
             e.printStackTrace();
         }
     }
-<<<<<<< Updated upstream
-    
-    public SpaService getServiceById(int id) {
-        SpaService service = null;
-        String sql = "SELECT * FROM spaservice WHERE id = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    service = new SpaService();
-                    service.setId(rs.getInt("id"));
-                    service.setName(rs.getString("name"));
-                    service.setDescription(rs.getString("description"));
-                    service.setDurationMinutes(rs.getInt("durationminutes"));
-                    service.setPrice(rs.getBigDecimal("price"));
-                    service.setActive(rs.getBoolean("isactive"));
-                    service.setCategoryId(rs.getInt("categoryid"));
-                    service.setImage(rs.getString("image"));
-                    service.setCategoryId(rs.getInt("CategoryId"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // hoặc ghi log
-        }
-
-        return service;
-    }
-    
-=======
-
->>>>>>> Stashed changes
     public void updateService(SpaService service) {
         String sql = "UPDATE SpaService SET name = ?, description = ?, durationMinutes = ?, price = ?, categoryId = ?, image = ?, IsActive = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -438,15 +404,9 @@ public class SpaServiceDAO extends DBContext {
             e.printStackTrace();
         }
     }
-<<<<<<< Updated upstream
-    public void updateSpaService(SpaService service) {
-        String sql = "UPDATE spaservice SET name = ?, description = ?, durationminutes = ?, price = ?, categoryid = ?, image = ?, isactive = ? WHERE id = ?";
-
-=======
 
     public void updateSpaService2(SpaService service) {
         String sql = "UPDATE SpaService SET name = ?, description = ?, durationMinutes = ?, price = ?, categoryId = ?, image = ?, IsActive = ? WHERE id = ?";
->>>>>>> Stashed changes
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, service.getName());
             stmt.setString(2, service.getDescription());
@@ -455,16 +415,6 @@ public class SpaServiceDAO extends DBContext {
             stmt.setInt(5, service.getCategoryId());
             stmt.setString(6, service.getImage());
             stmt.setBoolean(7, service.isActive());
-<<<<<<< Updated upstream
-            stmt.setInt(8, service.getId());
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace(); // Có thể thay bằng logging
-        }
-    }
-    
-=======
 
             stmt.setInt(8, service.getId());
             stmt.executeUpdate();
@@ -520,7 +470,6 @@ public class SpaServiceDAO extends DBContext {
      *
      * @return The total number of spa services.
      */
->>>>>>> Stashed changes
     public int getTotalSpaServices() {
         String query = "SELECT COUNT(*) AS total FROM SpaService";
         int total = 0;
@@ -536,10 +485,6 @@ public class SpaServiceDAO extends DBContext {
         }
         return total;
     }
-<<<<<<< Updated upstream
-
-
-=======
     
     
     public List<SpaService> getActiveSpaServices() {
@@ -563,18 +508,126 @@ public class SpaServiceDAO extends DBContext {
         }
         return list;
     }
+    
+    public List<SpaService> getSpaserviceFilter(int page, int pageSize, String name, String price, String status, String category, String sortBy, String sortOrder){
+        List<SpaService> spaServiceList = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        StringBuilder query = new StringBuilder("select s.Id, s.Name, s.DurationMinutes, s.Price, s.CategoryID, s.IsActive\n" +
+                    "from SpaService s\n" +
+                    "WHERE 1=1");
+        if(name != null && !name.isEmpty()){
+            query.append(" and s.Name LIKE ?");
+        }
+        if(price != null && !price.isEmpty()){
+            query.append(" and CAST(s.Price AS VARCHAR) LIKE ?");
+        }
+        if(status != null && !status.isEmpty()){
+            query.append(" and s.IsActive = ?");
+        }
+        if(category != null && !category.isEmpty()){
+            query.append(" and s.CategoryID = ?");
+        }
+        if (sortBy != null && !sortBy.isEmpty()) {
+            query.append(" ORDER BY ").append(sortBy).append(" ").append(sortOrder);
+        } else {
+            query.append(" ORDER BY s.DurationMinutes DESC");
+        }
+        query.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        
+        try(PreparedStatement stmt = connection.prepareStatement(query.toString())){
+            int paramIndex = 1;
+            if(name != null && !name.isEmpty()){
+            stmt.setString(paramIndex++, "%" + name + "%");
+        }
+            if(price != null && !price.isEmpty()){
+            stmt.setString(paramIndex++, "%" + price + "%");
+        }
+            if (status != null && !status.isEmpty()) {
+            stmt.setBoolean(paramIndex++, status.equalsIgnoreCase("show"));
+        }
+            if (category != null && !category.isEmpty()) {
+            stmt.setInt(paramIndex++, Integer.parseInt(category));
+        }
+            stmt.setInt(paramIndex++, offset);
+            stmt.setInt(paramIndex, pageSize);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                SpaService spa = new SpaService();
+            spa.setId(rs.getInt("Id"));
+            spa.setName(rs.getString("Name"));
+            spa.setDurationMinutes(rs.getInt("DurationMinutes"));
+            spa.setPrice(rs.getBigDecimal("Price"));
+            spa.setCategoryId(rs.getInt("CategoryID"));
+            spa.setActive(rs.getBoolean("IsActive"));
+
+            spaServiceList.add(spa);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+       return spaServiceList;
+    }
+    
+   public int getTotalSpaservice(String name, String price, String status, String category) {
+    int total = 0;
+    StringBuilder query = new StringBuilder("SELECT COUNT(*) as Total FROM SpaService s WHERE 1=1");
+
+    if (name != null && !name.isEmpty()) {
+        query.append(" AND s.Name LIKE ?");
+    }
+    if (price != null && !price.isEmpty()) {
+        query.append(" AND CAST(s.Price AS VARCHAR) LIKE ?");
+    }
+    if (status != null && !status.isEmpty()) {
+        query.append(" AND s.IsActive = ?");
+    }
+    if (category != null && !category.isEmpty()) {
+        query.append(" AND s.CategoryID = ?");
+    }
+
+    try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+        int paramIndex = 1;
+        if (name != null && !name.isEmpty()) {
+            stmt.setString(paramIndex++, "%" + name + "%");
+        }
+        if (price != null && !price.isEmpty()) {
+            stmt.setString(paramIndex++, "%" + price + "%");
+        }
+        if (status != null && !status.isEmpty()) {
+            stmt.setBoolean(paramIndex++, status.equalsIgnoreCase("show"));
+        }
+        if (category != null && !category.isEmpty()) {
+            stmt.setInt(paramIndex++, Integer.parseInt(category));
+        }
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            total = rs.getInt("Total");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return total;
+}
+
+    
 
     public static void main(String[] args) {
-
         // Tạo đối tượng DAO
         SpaServiceDAO dao = new SpaServiceDAO();
 
-        // Gọi hàm và in kết quả
-        int total = dao.getTotalSpaServices();
-        System.out.println("Total spa services: " + total);
+        // Gọi hàm và in kết quả test
+        int total = dao.getTotalSpaservice(
+            "",       // name
+            "",       // price
+            "",   // status: "show" hoặc "hide"
+            ""        // categoryId
+        );
 
-
+        System.out.println("Tổng số Spa Services: " + total);
     }
 
->>>>>>> Stashed changes
+       
+
 }

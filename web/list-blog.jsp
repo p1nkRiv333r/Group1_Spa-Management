@@ -12,63 +12,49 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>List Blog</title>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-        <style>
-            #product:hover, #product *:hover {
-                background-color: #e6e6e6;
-            }
-        </style>
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600,700&display=swap" rel="stylesheet">
+
+        <!-- Css Styles -->
+        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+        <link rel="stylesheet" href="css/flaticon.css" type="text/css">
+        <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+        <link rel="stylesheet" href="css/nice-select.css" type="text/css">
+        <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+        <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
+        <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+        <link rel="stylesheet" href="css/style.css" type="text/css">
     </head>
     <body>
-        <jsp:include page="header.jsp"></jsp:include>
-            <!-- Header-->
-            <header class="py-5" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(https://w0.peakpx.com/wallpaper/752/914/HD-wallpaper-sabito-s-haori-kimetsu-no-yaiba-pattern.jpg);">
-                <div class="container px-4 px-lg-5 my-5">
-                    <div class="text-center text-white">
-                        <h1 class="display-4 fw-bolder">Shop in style</h1>
-                        <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+        <!-- Header Section Begin -->
+        <%@ include file="header.jsp" %>
+        <!-- Header End -->
+
+
+        <!-- Breadcrumb Section Begin -->
+        <div class="breadcrumb-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="breadcrumb-text">
+                            <h2>Our Blogs</h2>
+                            <div class="bt-option">
+                                <a href="./home.html">Home</a>
+                                <span>Blogs</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </header>
-            <div class="col-md-12 d-flex justify-content-center p-3">
-                <div id="sidebar" class="col-md-2 p-3" style="border: 1px solid rgb(144, 141, 141); height: 100vh;">
-                    <form method="get" action="list-blog" class="mr-0">
-                        <div id="product-search">
-                            <h3>Search Blogs</h3>
-                            <input type="text" id="search-box" name="searchQuery" placeholder="Search for blogs..." class="form-control" value="${param.searchQuery}">
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Category:</label>
-                        <select id="category" name="category" class="form-control">
-                            <option value="">All</option>
-                            <c:forEach var="cat" items="${categories}">
-                                <option value="${cat.categoryName}" ${param.category == cat.categoryName ? 'selected' : ''}>${cat.categoryName}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </form>
-                <div id="latest-products">
-                    <h3>Latest Blogs</h3>
-                    <table class="table">
-                        <tbody id="table-content-body">
-                            <c:forEach items="${latestPosts}" var="post">
-                                <tr>
-                                    <td><img src="${post.imgURL}" alt="alt" width="50px" height="50px"/></td>
-                                    <td>${post.title}</td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="static-contacts" style="margin-top: 15px">
-                    <h3>Contact Us</h3>
-                    <p>Email: contact@example.com</p>
-                    <p>Phone: 123-456-7890</p>
                 </div>
             </div>
+        </div>
+        <!-- Breadcrumb Section End -->
+
+
+        <div class="col-md-12 d-flex justify-content-center p-3">
+
             <div class="col-md-10 p-3">
                 <c:if test="${isSuccess ne null && isSuccess}">
                     <div class="alert alert-success alert-dismissible fade show mt-2" role="alert" id="mess">
@@ -82,38 +68,75 @@
                         <button type="button" class="btn-close"  onclick="document.getElementById('mess').style.display = 'none'"></button>
                     </div>
                 </c:if>
-                <h2>Our Blogs</h2>
-                <table class="table">
-                    <tbody id="table-content-body">
-                        <c:forEach var="post" items="${posts}">
-                            <tr>
-                                <td><img src="${post.imgURL}" alt="alt" width="200px" height="200px"/></td>
-                                <td>${post.title}</td>
-                                <td>${fn:substring(post.content, 0, 50)}...</td>
-                                <td>
-                                    <a class="btn btn-primary" href="post-detail?id=${post.id}">See more</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <nav>
-                    <ul class="pagination">
-                        <c:if test="${currentPage > 1}">
-                            <li class="page-item"><a class="page-link" href="list-blog?page=${currentPage - 1}&category=${param.category}&search=${param.search}">Previous</a></li>
-                            </c:if>
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                            <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                <a class="page-link" href="list-blog?page=${i}&category=${param.category}&search=${param.search}">${i}</a>
-                            </li>
-                        </c:forEach>
-                        <c:if test="${currentPage < totalPages}">
-                            <li class="page-item"><a class="page-link" href="list-blog?page=${currentPage + 1}&category=${param.category}&search=${param.search}">Next</a></li>
-                            </c:if>
-                    </ul>
-                </nav>
-            </div>
 
+                <!-- Rooms Section Begin -->
+                <section class="rooms-section spad">
+                    <div class="container">
+                        <div class="row">
+                            <c:if test="${empty posts}">
+                                <p>No posts found.</p>
+                            </c:if>
+                            <c:forEach var="post" items="${posts}">
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="room-item">
+                                        <img src="${post.imgURL}" alt="" height="300">
+                                        <div class="ri-text">
+                                            <h4>${post.title}</h4>
+                                            <a href="./blog-detail?id=${post.id}" class="primary-btn">More Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+
+                            <div class="col-lg-12">
+                                <div class="room-pagination">
+                                    <c:if test="${currentPage > 1}">
+                                        <a href="?page=${currentPage - 1}">
+                                            <i class="fa fa-long-arrow-left"></i> Previous 
+                                        </a>
+                                    </c:if>
+
+                                    <!-- Always show first page -->
+                                    <a href="?page=1" class="${currentPage == 1 ? 'active' : ''}">1</a>
+
+                                    <!-- Show leading dots if currentPage is far from beginning -->
+                                    <c:if test="${currentPage > 4}">
+                                        <span>...</span>
+                                    </c:if>
+
+                                    <!-- Show range around currentPage -->
+                                    <c:forEach var="i" begin="${currentPage - 1}" end="${currentPage + 1}">
+                                        <c:if test="${i > 1 && i < totalPages}">
+                                            <a href="?page=${i}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                                        </c:if>
+                                    </c:forEach>
+
+                                    <!-- Show trailing dots if currentPage is far from end -->
+                                    <c:if test="${currentPage < totalPages - 2}">
+                                        <span>...</span>
+                                    </c:if>
+
+                                    <!-- Always show last page -->
+                                    <c:if test="${totalPages > 1}">
+                                        <a href="?page=${totalPages}" class="${currentPage == totalPages ? 'active' : ''}">${totalPages}</a>
+                                    </c:if>
+
+                                    <c:if test="${currentPage < totalPages}">
+                                        <a href="?page=${currentPage + 1}">
+                                            Next <i class="fa fa-long-arrow-right"></i>
+                                        </a>
+                                    </c:if>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Rooms Section End -->
+            </div>
         </div>
+        <!-- Footer Section Begin -->
+        <%@include file="footer.html" %>
+        <!-- Footer Section End -->
     </body>
 </html>

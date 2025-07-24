@@ -11,10 +11,9 @@ import Model.Appointment;
 import Model.Room;
 import Model.User;
 import java.io.IOException;
-<<<<<<< Updated upstream
-=======
+
 import java.io.PrintWriter;
->>>>>>> Stashed changes
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

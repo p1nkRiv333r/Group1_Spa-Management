@@ -51,8 +51,6 @@ public class RoomDAO extends DBContext {
 
         return rooms;
     }
-<<<<<<< Updated upstream
-=======
     
     
     public Room getRoomId(int roomId) {
@@ -103,6 +101,5 @@ public class RoomDAO extends DBContext {
         return rooms;
     }
     
->>>>>>> Stashed changes
 
 }

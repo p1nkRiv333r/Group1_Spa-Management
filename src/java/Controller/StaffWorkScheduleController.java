@@ -11,21 +11,14 @@ import Model.Appointment;
 import Model.SpaService;
 import Model.User;
 import com.google.gson.Gson;
-<<<<<<< Updated upstream
-=======
 import java.io.IOException;
 import java.io.PrintWriter;
->>>>>>> Stashed changes
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-<<<<<<< Updated upstream
-import java.io.IOException;
-=======
->>>>>>> Stashed changes
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,10 +28,7 @@ import java.util.Map;
 
 /**
  *
-<<<<<<< Updated upstream
-=======
  * @author PCASUS
->>>>>>> Stashed changes
  */
 @WebServlet(name = "StaffWorkScheduleController", urlPatterns = {"/staff/schedule"})
 public class StaffWorkScheduleController extends HttpServlet {
@@ -91,14 +81,8 @@ public class StaffWorkScheduleController extends HttpServlet {
                     for (User staff : userDao.getStaffList()) {
                         if (appointment.getStaffId() == staff.getId()) {
                             event.put("title", staff.getFullname());
-<<<<<<< Updated upstream
-                            break;
-                        }
-                        
-=======
                         }
                         break;
->>>>>>> Stashed changes
                     }
 
                     event.put("start", isoFormat.format(appointment.getScheduledAt()));
