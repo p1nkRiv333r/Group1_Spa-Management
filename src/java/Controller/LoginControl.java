@@ -77,7 +77,7 @@ public class LoginControl extends HttpServlet {
             
             
             if (user.getRoleId()== 4) {
-                response.sendRedirect("admin/user");
+                response.sendRedirect("admin/settingUser");
                 return;
             }
             if (user.getRoleId() == 2) {
