@@ -37,82 +37,90 @@
         <%@ include file="admin-sidebar.jsp" %>
 
         <div class="mt-5 main-content">
-            <c:if test="${isSuccess ne null && isSuccess}">
-                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert" id="mess">
-                    <strong>Save success!</strong> 
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <c:if test="${isSuccess ne null && !isSuccess}">
-                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert" id="mess">
-                    <strong>Save failed!</strong> You should check your network.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
-            <div class="card-header">
-                Service Detail
-            </div>
 
-            <form method="post" action="/Spa/admin/settingservice" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addServiceModalLabel">View Service</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="mt-5 main-content">
+                <c:if test="${param.success ne null}">
+                    <div class="alert alert-success" role="alert">
+                        Success!
+                    </div>
+                </c:if>
+                <c:if test="${param.fail ne null}">
+                    <div class="alert alert-danger" role="alert">
+                        Failed!
+                    </div>
+                </c:if>
+                <div class="card-header">
+                    User detail
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="serviceId">ID:</label>
-                        <input type="text" class="form-control" id="serviceId" name="id" readonly value="${service.id}">
-                    </div>
-                    <div class="form-group">
-                        <label for="serviceName">Name</label>
-                        <input type="text" class="form-control" id="serviceName" name="name" required value="${service.name}">
-                    </div>
-                    <div class="form-group">
-                        <label for="serviceDescription">Description</label>
-                        <textarea class="form-control" id="serviceDescription" name="description" required>${service.description}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="serviceDuration">Duration (Minutes)</label>
-                        <input type="number" class="form-control" id="serviceDuration" name="durationMinutes" required value="${service.durationMinutes}">
-                    </div>
-                    <div class="form-group">
-                        <label for="servicePrice">Price</label>
-                        <input type="number" step="0.01" class="form-control" id="servicePrice" name="price" required value="${service.price}">
-                    </div>
-                    <div class="form-group">
-                        <label for="serviceCategory">Category</label>
-                        <select class="form-control" id="serviceCategory" name="category" required>
-                            <option value="" disabled selected>Select Category</option>
 
-                            <option value="2"  ${service.categoryId eq 2 ? 'selected' : ''}>Massage Therapy</option>
-                            <option value="3" ${service.categoryId eq 3 ? 'selected' : ''}>Facial Treatments</option>
-                            <option value="4" ${service.categoryId eq 4 ? 'selected' : ''}>Body Scrub</option>
-                            <option value="5" ${service.categoryId eq 5 ? 'selected' : ''}>Hair Removal</option>
-                            <option value="6" ${service.categoryId eq 6 ? 'selected' : ''}>Aromatherapy</option>
-                            <option value="7" ${service.categoryId eq 7 ? 'selected' : ''}>Manicure & Pedicure</option>
-                            <option value="8" ${service.categoryId eq 8 ? 'selected' : ''}>Hot Stone Therapy</option>
-                            <option value="9" ${service.categoryId eq 9 ? 'selected' : ''}>Sauna & Steam Bath</option>
-                            <option value="10" ${service.categoryId eq 10 ? 'selected' : ''}>Slimming Treatments</option>
-                            <option value="11" ${service.categoryId eq 11 ? 'selected' : ''}>Anti-Aging Treatments</option>
-                        </select>
+                <form method="post" action="/Spa/admin/add"  enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPostModalLabel">Add User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="form-group">
-                        <label>Current Image</label>
-                        <div>
-                            <img src="/Spa${service.image}" alt="Service Image" style="max-width: 150px; max-height: 150px; object-fit: cover; border-radius: 8px;">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="postTitleEdit">Email</label>
+                            <input type="text" class="form-control" id="Email" name="email" required value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="postTitleEdit">Name</label>
+                            <input type="text" class="form-control" id="userName" name="name" required value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="postTitleEdit">Address</label>
+                            <input type="text" class="form-control" id="userAddress" name="add" required value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="postTitleEdit">Phone</label>
+                            <input type="text" class="form-control" id="userPhone" name="phone" required value="">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Male"  }>
+                                <label class="form-check-label" for="genderMale">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female" }>
+                                <label class="form-check-label" for="genderFemale">Female</label>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">Role</label>
+                            <select class="form-control" id="userRole" name="role" required>
+                                <option value="" disabled selected>Select Role</option>
+                                <option value="1">Khách hàng</option>
+                                <option value="2" >Chuyên viên trị liệu</option>
+                                <option value="3" >Lễ tân</option>
+                                <option value="4" >Quản trị viên</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="userAvatar">Upload New Avatar</label>
+                            <input type="file" class="form-control" id="userAvatar" name="file" accept="image/jpeg,image/jpg,image/png">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="serviceImage">Upload New Image</label>
-                        <input type="file" class="form-control" id="serviceImage" name="file" accept="image/jpeg,image/jpg,image/png">
+
+                    <br>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href = '/Spa/admin/settingUser'">Return</button>
+
+                        <button type="submit" class="btn btn-primary">Save Post</button>
                     </div>
-                </div>
-                <br>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href = '/Spa/admin/settingService'">Return</button>
-                    <button type="submit" class="btn btn-primary">Save Service</button>
-                </div>
-            </form>
+
+                </form>
+            </div>
+
+
+
         </div>
 
 
@@ -122,9 +130,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
-<<<<<<< Updated upstream
-   
-=======
         <!--        <script>
                                             function view(id) {
                                                 fetch('post-detail?id=' + id)
@@ -142,7 +147,7 @@
         
                                                                 let listCategory = document.getElementsByClassName('cateOption');
                                                                 for (let i = 0; i < listCategory.length; i++) {
-                                                                    if (listCategory[i].value === post.categoryIdId) {
+                                                                    if (listCategory[i].value === post.categoryId) {
                                                                         listCategory[i].selected = true;
                                                                     }
                                                                 }
@@ -199,31 +204,30 @@
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
         <script>
-                var quill = new Quill('#postContentEdit', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            [{'header': [1, 2, 3, false]}],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{'align': []}],
-                            [{'list': 'ordered'}, {'list': 'bullet'}],
-                            ['link', 'image'],
-                            ['clean']
-                        ]
-                    }
-                });
+                            var quill = new Quill('#postContentEdit', {
+                                theme: 'snow',
+                                modules: {
+                                    toolbar: [
+                                        [{'header': [1, 2, 3, false]}],
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        [{'align': []}],
+                                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                                        ['link', 'image'],
+                                        ['clean']
+                                    ]
+                                }
+                            });
 
-                var form = document.getElementById('form');  // hoặc id form cụ thể
-                var content = document.getElementById('contenttent');
+                            var form = document.getElementById('form');  // hoặc id form cụ thể
+                            var content = document.getElementById('contenttent');
 
-                console.log(form)
+                            console.log(form)
 
-                form.addEventListener('submit', function (event) {
-                    document.getElementById('editContent').value = quill.root.innerHTML;
-                });
+                            form.addEventListener('submit', function (event) {
+                                document.getElementById('editContent').value = quill.root.innerHTML;
+                            });
         </script>
 
->>>>>>> Stashed changes
     </body>
 
 </html>

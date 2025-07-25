@@ -4,8 +4,8 @@
  */
 package Controller;
 
-import DAO.UserDAO;
-import Model.User;
+import DAO.ContactDAO;
+import Model.Contact;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,14 +13,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 
 /**
  *
- * @author anhdu
+ * @author Admin
  */
-@WebServlet(name = "LoginControl", urlPatterns = {"/login"})
-public class LoginControl extends HttpServlet {
+@WebServlet(name = "ContactController", urlPatterns = {"/contact"})
+public class ContactController extends HttpServlet {
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -29,10 +39,10 @@ public class LoginControl extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginControl</title>");
+            out.println("<title>Servlet ContactController</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginControl at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ContactController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -50,7 +60,7 @@ public class LoginControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("Login.jsp").forward(request, response);
+       
     }
 
     /**
@@ -64,35 +74,25 @@ public class LoginControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        // Lấy và xử lý dữ liệu contact
+        String name = request.getParameter("name");
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String subject = request.getParameter("subject");
+        String message = request.getParameter("message");
 
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.loginUser(email, password);
+        // Lưu 
+        Contact contact = new Contact();
+        contact.setName(name);
+        contact.setEmail(email);
+        contact.setPhoneNumber(phoneNumber);
+        contact.setSubject(subject);
+        contact.setMessage(message);
+        contact.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        
+        new ContactDAO().save(contact);
 
-        if (user != null) {
-            // save user info to session
-            request.getSession().setAttribute("user", user); 
-            
-            
-            if (user.getRoleId()== 4) {
-                response.sendRedirect("admin/settingUser");
-                return;
-            }
-            if (user.getRoleId() == 2) {
-                response.sendRedirect("marketing/list-post");
-                return;
-            }
-//            if (user.getRoleId() == 3) response.sendRedirect("sale/dashboard");
-//            if (user.getRoleId() == 6) response.sendRedirect("inventory/list-order");
-            
-            response.sendRedirect("home");
-        } else {
-            // Login failed
-            request.setAttribute("errorMessage", "Invalid email or password");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-        }
+        response.sendRedirect("home?contact=success");
     }
 
     /**

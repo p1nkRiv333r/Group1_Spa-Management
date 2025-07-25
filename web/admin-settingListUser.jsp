@@ -52,124 +52,110 @@
             <div class="card-header">
                 Setting List
             </div>
-           
-
-
-            <%-- Service Table Section --%>
-
-            <form method="get" action="/Spa/admin/setting/user-list" class="form-inline mb-3" id="searchFormService">
+            <form method="get" action="" class="form-inline mb-3">
                 <table>
                     <tr>
                         <td>
                             <div class="form-group">
-                                <label for="searchNameSpa">Name</label>
-                                <input type="text" id="searchNameSpa" name="searchNameSpa" class="form-control" value="${param.searchNameSpa}">
+                                <label for="searchEmail">Email</label>
+                                <input type="text" id="searchEmail" name="searchEmail" class="form-control" value="${param.searchEmail}">
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <label for="searchPrice">Price</label>
-                                <input type="text" id="searchPrice" name="searchPrice" class="form-control" value="${param.searchPrice}">
+                                <label for="searchName">Name</label>
+                                <input type="text" id="searchName" name="searchName" class="form-control" value="${param.searchName}">
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <label for="statusService">Status</label>
-                                <select id="statusService" name="statusService" class="form-control">
+                                <label for="status">Status</label>
+                                <select id="status" name="status" class="form-control">
                                     <option value="">All</option>
-                                    <option value="show" ${param.statusService == 'show' ? 'selected' : ''}>Show</option>
-                                    <option value="hide" ${param.statusService == 'hide' ? 'selected' : ''}>Hide</option>
+                                    <option value="show" ${param.status == 'show' ? 'selected' : ''}>Show</option>
+                                    <option value="hide" ${param.status == 'hide' ? 'selected' : ''}>Hide</option>
                                 </select>
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <label for="category">Category</label>
-                                <select class="form-control" name="category" id="category">
-                                    <option value="">Select Category</option>
-                                    <option value="2" ${param.category == '2' ? 'selected' : ''}>Massage Therapy</option>
-                                    <option value="3" ${param.category == '3' ? 'selected' : ''}>Facial Treatments</option>
-                                    <option value="4" ${param.category == '4' ? 'selected' : ''}>Body Scrub</option>
-                                    <option value="5" ${param.category == '5' ? 'selected' : ''}>Hair Removal</option>
-                                    <option value="6" ${param.category == '6' ? 'selected' : ''}>Aromatherapy</option>
-                                    <option value="7" ${param.category == '7' ? 'selected' : ''}>Manicure & Pedicure</option>
-                                    <option value="8" ${param.category == '8' ? 'selected' : ''}>Hot Stone Therapy</option>
-                                    <option value="9" ${param.category == '9' ? 'selected' : ''}>Sauna & Steam Bath</option>
-                                    <option value="10" ${param.category == '10' ? 'selected' : ''}>Slimming Treatments</option>
-                                    <option value="11" ${param.category == '11' ? 'selected' : ''}>Anti-Aging Treatments</option>
+                                <label for="role">Role</label>
+                                <select class="form-control" name="role" id="role">
+                                    <option value="">Select Role</option>
+                                    <option value="1">Khách hàng</option>
+                                    <option value="2">Chuyên viên trị liệu</option>
+                                    <option value="3">Lễ tân</option>
+                                    <option value="4">Quản trị viên</option>
+
                                 </select>
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <label for="sortByService">Sort</label>
-                                <select id="sortByService" name="sortByService" class="form-control">
+                                <label for="sortBy">Sort</label>
+                                <select id="sortBy" name="sortBy" class="form-control">
                                     <!-- Populated dynamically by JS -->
                                 </select>
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <label for="sortOrderService">Order</label>
-                                <select id="sortOrderService" name="sortOrderService" class="form-control">
-                                    <option value="ASC" ${param.sortOrderService == 'ASC' ? 'selected' : ''}>Ascending</option>
-                                    <option value="DESC" ${param.sortOrderService == 'DESC' ? 'selected' : ''}>Descending</option>
+                                <label for="sortOrder">Order</label>
+                                <select id="sortOrder" name="sortOrder" class="form-control">
+                                    <option value="ASC" ${param.sortOrder == 'ASC' ? 'selected' : ''}>Ascending</option>
+                                    <option value="DESC" ${param.sortOrder == 'DESC' ? 'selected' : ''}>Descending</option>
                                 </select>
                             </div>
                         </td>
                         <td>
                             <div class="form-group" style="margin-left: 10px">
-                                <label for="sortOrderService"></label><br>
+                                <label for="sortOrder"></label><br>
                                 <button type="button" class="btn btn-success"
-                                        onclick="window.location.href = '/Spa/admin/addService'">
-                                    Add New Service
+                                        onclick="window.location.href = '/Spa/admin/add'">
+                                    Add New User
                                 </button>
                             </div>
                         </td>
                     </tr>
                 </table>
             </form>
-
-            <table class="table table-bordered table-striped" id="serviceTable">
+            <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Duration</th>
-                        <th>Price</th>
-                        <th>Category</th>
+                        <th>Email</th>
+                        <th>Full name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Role</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="table-content-body-service">
-                    <c:forEach var="service" items="${Services}">
+                <tbody id="table-content-body">
+                    <c:forEach var="user" items="${users}">
                         <tr>
-                            <td>${service.id}</td>
-                            <td>${service.name}</td>
-                            <td>${service.durationMinutes}</td>
-                            <td>${service.price}</td>
+                            <td>${user.id}</td>
+                            <td>${user.email}</td>
+                            <td>${user.fullname}</td>
+                            <td>${user.address}</td>
+                            <td>${user.phone}</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${service.getCategoryId() eq 2}">Massage Therapy</c:when>
-                                    <c:when test="${service.getCategoryId() eq 3}">Facial Treatments</c:when>
-                                    <c:when test="${service.getCategoryId() eq 4}">Body Scrub</c:when>
-                                    <c:when test="${service.getCategoryId() eq 5}">Hair Removal</c:when>
-                                    <c:when test="${service.getCategoryId() eq 6}">Aromatherapy</c:when>
-                                    <c:when test="${service.getCategoryId() eq 7}">Manicure & Pedicure</c:when>
-                                    <c:when test="${service.getCategoryId() eq 8}">Hot Stone Therapy</c:when>
-                                    <c:when test="${service.getCategoryId() eq 9}">Sauna & Steam Bath</c:when>
-                                    <c:when test="${service.getCategoryId() eq 10}">Slimming Treatments</c:when>
-                                    <c:when test="${service.getCategoryId() eq 11}">Anti-Aging Treatments</c:when>
-                                    <c:otherwise>Danh mục không xác định</c:otherwise>
+                                    <c:when test="${user.roleId eq 1}">Khách hàng</c:when>
+                                    <c:when test="${user.roleId eq 2}">Chuyên viên trị liệu</c:when>
+                                    <c:when test="${user.roleId eq 3}">Lễ tân</c:when>
+                                    <c:when test="${user.roleId eq 4}">Quản trị viên</c:when>
+                                    <c:otherwise>Vai trò không xác định</c:otherwise>
                                 </c:choose>
+
                             </td>
                             <td>
-                                <a class="btn btn-info btn-sm" href="/Spa/admin/settingservice?id=${service.id}">Edit</a>
-                                <c:if test="${service.isActive()}">
-                                    <a href="/Spa/admin/servicestatus?id=${service.id}&isActive=1" class="btn btn-danger btn-sm">Hide</a>
+                                <a class="btn btn-info btn-sm" href="/Spa/admin/setting?id=${user.id}">Edit</a>
+                                <c:if test="${!user.isDeleted}">
+                                    <a href="/Spa/admin/status?id=${user.id}&isDeleted=1" class="btn btn-danger btn-sm">Hide</a>
                                 </c:if>
-                                <c:if test="${!service.isActive()}">
-                                    <a href="/Spa/admin/servicestatus?id=${service.id}&isActive=0" class="btn btn-success btn-sm">Show</a>
+                                <c:if test="${user.isDeleted}">
+                                    <a href="/Spa/admin/status?id=${user.id}&isDeleted=0" class="btn btn-success btn-sm">Show</a>
                                 </c:if>
                             </td>
                         </tr>
@@ -179,24 +165,27 @@
 
             <nav>
                 <ul class="pagination">
-                    <c:if test="${pageService > 1}">
+                    <c:if test="${pageUser > 1}">
                         <li class="page-item">
-                            <a class="page-link" href="${pageContext.request.contextPath}/admin/settingService?pageService=${pageService - 1}&tab=service">Prev</a>
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/settingUser?pageUser=${pageUser - 1}&tab=user">Prev</a>
                         </li>
                     </c:if>
-                    <c:forEach var="i" begin="1" end="${totalPagesService}">
-                        <li class="page-item ${pageService == i ? 'active' : ''}">
-                            <a class="page-link" href="${pageContext.request.contextPath}/admin/settingService?pageService=${i}&tab=service">${i}</a>
+                    <c:forEach var="i" begin="1" end="${totalPagesUser}">
+                        <li class="page-item ${pageUser == i ? 'active' : ''}">
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/settingUser?pageUser=${i}&tab=user">${i}</a>
                         </li>
                     </c:forEach>
-                    <c:if test="${pageService < totalPagesService}">
+                    <c:if test="${pageUser < totalPagesUser}">
                         <li class="page-item">
-                            <a class="page-link" href="${pageContext.request.contextPath}/admin/settingService?pageService=${pageService + 1}&tab=service">Next</a>
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/settingUser?pageUser=${pageUser + 1}&tab=user">Next</a>
                         </li>
                     </c:if>
                 </ul>
             </nav>
 
+
+
+           
 
 
 
@@ -242,9 +231,6 @@
                                             });
             </script>
 
-<<<<<<< Updated upstream
-            
-=======
             <script>
                 // Lưu trữ dữ liệu gốc của bảng
                 let originalRows = [];
@@ -388,7 +374,6 @@
                     });
                 });
             </script>
->>>>>>> Stashed changes
 
 
             <script>

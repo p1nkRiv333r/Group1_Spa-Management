@@ -16,26 +16,33 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author anhdu
+ * @author PCASUS
  */
-@WebServlet(name = "LoginControl", urlPatterns = {"/login"})
-public class LoginControl extends HttpServlet {
+@WebServlet(name = "AdminSettingUserStatusController", urlPatterns = {"/admin/status"})
+public class AdminSettingUserStatusController extends HttpServlet {
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginControl</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginControl at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        int id = Integer.parseInt(request.getParameter("id"));
+        int isDeleted = Integer.parseInt(request.getParameter("isDeleted"));
+        UserDAO userDAO = new UserDAO();
+        User user = new UserDAO().getUserById(id);
+        user.setIsDeleted(isDeleted == 0 ? false : true);
+        userDAO.updateUser(user);
+        request.setAttribute("isSuccess", true);
+        request.setAttribute("user", user);
+
+        // Chuyển hướng đến JSP
+        request.getRequestDispatcher("/admin/settingUser").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -50,7 +57,7 @@ public class LoginControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("Login.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -64,35 +71,7 @@ public class LoginControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.loginUser(email, password);
-
-        if (user != null) {
-            // save user info to session
-            request.getSession().setAttribute("user", user); 
-            
-            
-            if (user.getRoleId()== 4) {
-                response.sendRedirect("admin/settingUser");
-                return;
-            }
-            if (user.getRoleId() == 2) {
-                response.sendRedirect("marketing/list-post");
-                return;
-            }
-//            if (user.getRoleId() == 3) response.sendRedirect("sale/dashboard");
-//            if (user.getRoleId() == 6) response.sendRedirect("inventory/list-order");
-            
-            response.sendRedirect("home");
-        } else {
-            // Login failed
-            request.setAttribute("errorMessage", "Invalid email or password");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

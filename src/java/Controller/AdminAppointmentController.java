@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Legion
  */
 @WebServlet(name = "AdminAppointmentController", urlPatterns = {"/admin/appointments"})
